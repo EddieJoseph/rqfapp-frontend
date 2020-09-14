@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: Qualitoolbackend
+  datasource:
+    url: jdbc:postgresql://qualitool_db:5432/${POSTGRES_DB}?useUnicode=true&characterEncoding=utf-8
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    sql-script-encoding: UTF-8
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        hbm2ddl:
+          import_files: data.sql
+        connection:
+          charSet: UTF-8
+  #TODO Test if this is needed.
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  #TODO This actually should not be needed
+  resources:
+    cache:
+      cachecontrol:
+        cache-private: true
+
+jwt:
+  secret: ${JWT_SECRET}
+
+server:
+  port: 8082
+  http2:
+    enabled: true
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 512
+
+#  port: 8443
+  ssl:
+#    enabled: true
+
+    key-store: cert/qualitool.p12
+    key-store-password: qualitool
+    key-store-type: PKCS12
+    key-alias: 1
+
+#    key-store: keystore.properties
+#    key-store-password: dummy
+#    key-store-type: PEMCFG.MOD
+#    key-alias: keycert

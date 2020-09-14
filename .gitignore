@@ -1,0 +1,8 @@
+qualitool.env
+qualitool.conf
+Browsercert.cer
+qualitool.cert.pem
+qualitool.key.pem
+cert/*
+personaldata.sql
+static/*
