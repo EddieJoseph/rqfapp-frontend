@@ -41,13 +41,36 @@ class PersonInfo extends Component{
             }
         ).then((response => {
             const data = response.data;
-            const url = URL.createObjectURL(data)
-            console.log(url)
-            window.location.replace(url)
-            //this.saveFile("Example.xlsx", "data:attachment/text", data)
-            //store.dispatch(saveImageUrl(person.id, url))
+            //const url = URL.createObjectURL(data)
+            //console.log(url)
+            //window.location.replace(url)
+
+
+
+            var saveData = (function () {
+                var a = document.createElement("a");
+                document.body.appendChild(a);
+                a.style = "display: none";
+                return function (data, fileName) {
+                    var json = JSON.stringify(data),
+                        //blob = new Blob([json], {type: "octet/stream"}),
+                        //url = window.URL.createObjectURL(blob);
+                        url = window.URL.createObjectURL(data);
+                    a.href = url;
+                    a.download = fileName;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                };
+            }());
+            saveData(data,this.props.person.nickname+".xlsx")
+
+
+
+
         })).catch((error)=>{console.log(error)})
     }
+
+    
 
 
     render(){
