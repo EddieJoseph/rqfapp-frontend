@@ -165,7 +165,8 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
         if(Integer.parseInt(segments[2].trim())!=0){
             cb.setMinimumachieved(Integer.parseInt(segments[2].trim()));
         } else {
-            cb.setMinimumachieved(null);
+            //cb.setMinimumachieved(null);
+            cb.setMinimumachieved(0);
         }
         if(segments.length>3){
             cb.setDescription(Stream.of(segments).skip(4).reduce(segments[3],(st,e)->st+","+e).trim());
