@@ -14,6 +14,7 @@ import GroupSettings from './components/GroupSettings';
 
 import 'materialize-css/dist/css/materialize.min.css';
 import 'material-design-icons/iconfont/material-icons.css'
+import M from 'materialize-css/dist/js/materialize.min.js';
 
 class App extends Component {
 
@@ -41,6 +42,8 @@ class App extends Component {
     } else {
       document.title = "Qualitool"
     }
+    var elem = document.querySelector('.sidenav');
+    var instance = new M.Sidenav(elem);
   }
 
   componentDidUpdate(prevProps) {

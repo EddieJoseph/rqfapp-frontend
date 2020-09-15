@@ -39,7 +39,10 @@ class _Comment extends Component{
                             <div className="col s1 right-align dicon"><i className="material-icons" onClick={this.handleDelete}>delete</i></div>
                         </div>
                     </div>
-                        <p>{this.props.data.text}</p>
+                    <div className="card-content">
+                    <div className="row">
+                        <div className="col"><p>{this.props.data.text}</p></div>
+                    </div></div>
                 </div>
             </div>
         )

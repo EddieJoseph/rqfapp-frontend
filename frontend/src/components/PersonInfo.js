@@ -32,7 +32,6 @@ class PersonInfo extends Component{
             baseurl+"comment/download/"+personId+".xlsx",
             {
                 method: 'GET',
-                /*mode: 'no-cors',*/
                 headers: authentification,
                 withCredentials: false,
                 credentials: 'same-origin',
@@ -41,11 +40,6 @@ class PersonInfo extends Component{
             }
         ).then((response => {
             const data = response.data;
-            //const url = URL.createObjectURL(data)
-            //console.log(url)
-            //window.location.replace(url)
-
-
 
             var saveData = (function () {
                 var a = document.createElement("a");
@@ -53,8 +47,6 @@ class PersonInfo extends Component{
                 a.style = "display: none";
                 return function (data, fileName) {
                     var json = JSON.stringify(data),
-                        //blob = new Blob([json], {type: "octet/stream"}),
-                        //url = window.URL.createObjectURL(blob);
                         url = window.URL.createObjectURL(data);
                     a.href = url;
                     a.download = fileName;
@@ -63,10 +55,6 @@ class PersonInfo extends Component{
                 };
             }());
             saveData(data,this.props.person.nickname+".xlsx")
-
-
-
-
         })).catch((error)=>{console.log(error)})
     }
 
