@@ -42,14 +42,27 @@ class _Checkbox extends Component{
 
     setExpanded=(val)=>{
         if(val){
-            this.props.expandCb(this.props.data.id)
+            //this.props.expandCb(this.props.data.id)
+            this.props.expandCb(this.getIndexOf(this.props.data.id))
         }else{
-            this.props.reduceCb(this.props.data.id)
+            //this.props.reduceCb(this.props.data.id)
+            this.props.reduceCb(this.getIndexOf(this.props.data.id))
         }
     }
 
+    getIndexOf=(id)=>{
+
+        for( let b in this.props.expandedBoxes) {
+            if(this.props.expandedBoxes[b].id===id){
+                return b
+            }
+        }
+
+        
+    }
+
     setCommentsExpanded=(val)=>{
-        this.props.toggleCom(this.props.data.id)
+        this.props.toggleCom(this.getIndexOf(this.props.data.id))
         //this.props.setCheckBoxCommentExpanded(this.props.data.id,val)
     }
 

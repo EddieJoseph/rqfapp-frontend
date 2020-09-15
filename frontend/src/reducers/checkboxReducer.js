@@ -40,6 +40,9 @@ const checkboxReducer = (state ={structure:[], checkboxes: [], expanded: [], ver
 
 function generateExpanded(boxes, level) {
 let expanded = [];
+
+console.log(boxes)
+
 for(let box in boxes){
     expanded.push(generateBoxExpansion(boxes[box],level))
     expanded.push(...generateExpanded(boxes[box].boxes,level+1))

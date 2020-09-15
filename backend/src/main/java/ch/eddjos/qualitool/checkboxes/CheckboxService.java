@@ -61,7 +61,15 @@ public class CheckboxService {
 
         Versionized<PersonalCheckbox> ret = updateCach.update(pc.getPersonId(), pc.getCheckboxId(), pc.copy());
 
+
         List<Versionized<PersonalCheckbox>> vList = testCheckboxes(person_id);
+//        List<Versionized<PersonalCheckbox>> vList;
+//        if(checkbox.getSeverity()<2) {
+//            vList = testCheckboxes(person_id);
+//        }else{
+//            vList = new ArrayList<>();
+//        }
+
         if(vList.size()>0){
             ret = vList.stream().reduce(ret,(acc,c)->acc.combine(c));
         }
@@ -131,6 +139,7 @@ public class CheckboxService {
         Boolean pas=pcb.getPassed();
 
         boolean minimum=false;
+        logger.info("severity: {}", cb.getSeverity());
         if(cb.getSeverity()!=2) {
             if (cb.getMinimumachieved() <= nonCriticalPassed) {
                 minimum = true;

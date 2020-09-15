@@ -64,8 +64,8 @@ class _AddComment extends Component{
             <div className="card-content">
                 <form autoComplete="off" onSubmit={this.handleSubmit}>
                     <div className="row">
-                        <div className="col s10" ><Select value={selectedOption} onChange={this.handleChange} options={options} placeholder={"Blockname"} tabIndex="0"/></div>
-                        <div className="col s10" ><Select value={selectedGroup} onChange={this.handleChangeGroup} options={groupOptions} placeholder={"Gruppe"} /></div>
+                        <div className="col s6" ><Select value={selectedOption} onChange={this.handleChange} options={options} placeholder={"Blockname"} tabIndex="0"/></div>
+                        <div className="col s4" ><Select value={selectedGroup} onChange={this.handleChangeGroup} options={groupOptions} placeholder={"Gruppe"} /></div>
                         <div className="col s1">
                             <button className="waves-effect waves-light btn" tabIndex="0" onClick={this.handleSubmit}><i className="medium material-icons">save</i></button>
                         </div>

@@ -8,3 +8,4 @@ qualitool.p12
 src/main/resources/application-dev.yml
 static/*
 cert/*
+src/main/resources/init/*

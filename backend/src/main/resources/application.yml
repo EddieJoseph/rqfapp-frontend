@@ -32,6 +32,12 @@ spring:
 jwt:
   secret: ${JWT_SECRET}
 
+adminaccount:
+  firstname: ${ADM_FN}
+  lastnaem: ${ADM_LN}
+  username: ${ADM_UN}
+  password: ${ADM_PW}
+
 server:
   port: 8082
   http2:

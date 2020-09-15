@@ -3,6 +3,7 @@ package ch.eddjos.qualitool.checkboxes;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,7 +24,7 @@ public class Checkbox {
     }*/
 
     @Id
-    @GeneratedValue
+//    @GeneratedValue
     private int id;
     private String name;
     //@JsonIgnore
@@ -39,7 +40,7 @@ public class Checkbox {
     private Checkbox parent;
     @OneToMany
     @JoinColumn(name = "parent_id", updatable = false)
-    private List<Checkbox> boxes;
+    private List<Checkbox> boxes = new ArrayList<>();
 
     public int getId() {
         return id;
@@ -105,5 +106,17 @@ public class Checkbox {
         this.boxes = boxes;
     }
 
-
+    @Override
+    public String toString() {
+        return "Checkbox{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", level=" + level +
+                ", severity=" + severity +
+                ", minimumachieved=" + minimumachieved +
+                ", parent=" + parent +
+                //", boxes=" + boxes/*.stream().map(b->b.name)*/ +
+                '}';
+    }
 }
