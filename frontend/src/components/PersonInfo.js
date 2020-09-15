@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Link} from 'react-router-dom'
 import {connect} from 'react-redux';
+import axios from 'axios';
 class PersonInfo extends Component{
     state={
         expanded:true
@@ -24,6 +25,30 @@ class PersonInfo extends Component{
     handleExChange=()=>{
         this.setState({expanded:!this.state.expanded})
     }
+
+    getCommentList(baseurl, token, personId) {
+        const authentification={Authorization:token}
+        axios(
+            baseurl+"comment/download/"+personId+".xlsx",
+            {
+                method: 'GET',
+                /*mode: 'no-cors',*/
+                headers: authentification,
+                withCredentials: false,
+                credentials: 'same-origin',
+                crossdomain: true,
+                responseType: 'blob'
+            }
+        ).then((response => {
+            const data = response.data;
+            const url = URL.createObjectURL(data)
+            console.log(url)
+            window.location.replace(url)
+            //this.saveFile("Example.xlsx", "data:attachment/text", data)
+            //store.dispatch(saveImageUrl(person.id, url))
+        })).catch((error)=>{console.log(error)})
+    }
+
 
     render(){
         const {person} = this.props;
@@ -82,8 +107,11 @@ class PersonInfo extends Component{
                     <div className="col "><div className="bottom"><p style={this.style}>{person.firstname+" "+person.lastname}</p></div></div>
                     <div className="col "><div className="bottom"><p style={this.style}>{person.organisation}</p></div></div>
                     <div className="col right-align dicon"><i className="material-icons" onClick={this.handleExChange}>{this.state.expanded?"expand_less":"expand_more"}</i></div>
-                    <a href={this.props.baseurl+"comment/download/"+person.id+"?token="+this.props.token}>
-                    <div className="col right-align dicon"><i className="material-icons">file_download</i></div></a>
+                    
+
+                    <div onClick={()=>{this.getCommentList(this.props.baseurl,this.props.token,this.props.person.id)}}>
+                    <div className="col right-align dicon"><i className="material-icons">file_download</i></div>
+                    </div>
             </div>
             <div className="card-content">
             {row2}
@@ -94,6 +122,10 @@ class PersonInfo extends Component{
         return(personinfo)
     }
 }
+//<a href={this.props.baseurl+"comment/download/"+person.id+"?token="+this.props.token}></a>
+
+//<a href={this.props.baseurl+"comment/download/"+person.id+"?token="+this.props.token}>
+//                    <div className="col right-align dicon"><i className="material-icons">file_download</i></div></a>
 
 function mapStateToProps (state, props) {return {
     baseurl: state.config.baseurl,

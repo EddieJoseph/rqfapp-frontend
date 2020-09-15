@@ -6,15 +6,16 @@ import ch.eddjos.qualitool.person.Person;
 import ch.eddjos.qualitool.person.PersonService;
 import ch.eddjos.qualitool.updatecache.UpdateCache;
 import ch.eddjos.qualitool.updatecache.Versionized;
+import org.apache.commons.compress.utils.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -97,23 +98,42 @@ public class CommentController {
         }
     }
 
-    @GetMapping("/download/{id}")
-    public ResponseEntity getDownload(@PathVariable("id")int id){
+//    @GetMapping("/download/{id}")
+//    public ResponseEntity getDownload(@PathVariable("id")int id){
+//        System.out.println("entered download function");
+//        Person p = personService.get(id);
+//        byte[] data=service.generateCommentFile(id);
+//        ByteArrayResource resource = new ByteArrayResource(data);
+//        HttpHeaders headers=new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_DISPOSITION,"atachment;filename=\"Beobachtungen_"+p.getNickname()+".xlsx\"");
+//        headers.add("filename=","test.xlsx");
+//        headers.add(HttpHeaders.CONTENT_LENGTH,Integer.toString(data.length));
+//
+//
+//
+//        //return new ResponseEntity(resource,HttpStatus.OK);
+//        return ResponseEntity.ok()
+//                .headers(headers)
+//
+//                //.contentLength(data.length)
+////                .contentLength(resource.contentLength())
+//                //.contentLength(0)
+//                .contentType(MediaType.parseMediaType("application/xlsx"))
+//                //.contentType(MediaType.parseMediaType("application/octet-stream"))
+//
+//                .cacheControl(CacheControl.noCache())
+//
+//
+//                .body(resource);
+//    }
+
+    @GetMapping(value = "/download/{id}.xlsx", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public @ResponseBody byte[] getDownload(@PathVariable("id")int id/*, ServerHttpResponse response*/) throws IOException {
+        System.out.println("entered download function");
         Person p = personService.get(id);
         byte[] data=service.generateCommentFile(id);
-        ByteArrayResource resource = new ByteArrayResource(data);
-        HttpHeaders headers=new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION,"atachment;filename=\"Beobachtungen_"+p.getNickname()+".xlsx\"");
-        headers.add("filename=","test.xlsx");
-        headers.add(HttpHeaders.CONTENT_LENGTH,Integer.toString(data.length));
-
-        //return new ResponseEntity(resource,HttpStatus.OK);
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(data.length)
-                .contentType(MediaType.parseMediaType("application/xlsx"))
-                //.contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(resource);
+        ByteArrayResource resource = new ByteArrayResource(data,"atachment;filename=\"Beobachtungen_"+p.getNickname()+".xlsx\"");
+        return IOUtils.toByteArray(resource.getInputStream());
     }
 
 }
