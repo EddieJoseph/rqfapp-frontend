@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
@@ -25,12 +24,10 @@ import java.util.stream.Stream;
 @Component
 public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final CheckboxRepository checkboxRepository;
     private final BlockRepository blockRepository;
     private final BenutzerService benutzerService;
-
     private int checkboxCounter =0;
     private int blockCounter =0;
 
@@ -53,41 +50,28 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
         this.benutzerService = benutzerService;
     }
 
-//    @Value("classpath:init/RQF.cbd")
-//    ClassPathResource file;
-
     @Override
     @Transactional
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         if(checkboxRepository.findAll().size()>0){
+            logger.debug("Skipped initialization.");
             return;
         }
-
-        //ClassPathResource checkboxFile = new ClassPathResource("init/RQF.cbd");
+        logger.info("Started tool initialisation.");
         FileSystemResource checkboxFile = new FileSystemResource("init/RQF.cbd");
-//        ClassPathResource file = new ClassPathResource("./static/pictures/chaja.jpg");
-//        ClassPathResource file = new ClassPathResource("C:/Users/eddie/Qualitool/backend/init/RQF.cbd");
-
-
-
+        BufferedReader reader = null;
         try {
-            //logger.info("test: {}",file.);
-
             InputStream fileInputStream = checkboxFile.getInputStream();
-
-//            BufferedReader reader = new BufferedReader(new FileReader());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
+            reader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
             reader.readLine();
             String line = reader.readLine();
             Stack<Checkbox> stack = new Stack<>();
-
             while(line != null) {
                 if(StringUtils.countMatches(line,",")>=3){
                     if(getLevel(line)==0){
                         if(stack.empty()){
                             stack.push(createCheckbox(line,null));
                         }else{
-                            //TODO persist current master
                             while(stack.peek().getLevel()>0){
                                 stack.pop();
                             }
@@ -96,72 +80,64 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
                         }
                     }else{
                         if(getLevel(line)==stack.peek().getLevel()){
-                            //level equal
                             stack.pop();
                             stack.push(createCheckbox(line,stack.peek()));
 
                         }else if(getLevel(line)>stack.peek().getLevel()){
-                            //level higher
                             stack.push(createCheckbox(line,stack.peek()));
                         }else{
-                            //level smaller
                             while(getLevel(line)<=stack.peek().getLevel()){
                                 stack.pop();
                             }
                             stack.push(createCheckbox(line,stack.peek()));
                         }
                     }
-
-
-
-//                    System.out.println(getLevel(line)+line);
-//                    logger.info("CB:{}",createCheckbox(line,null));
-
-
-
-                    //logger.info("current top: {}",stack.peek());
-
                 }
-
                 line=reader.readLine();
             }
-
-
             while(stack.peek().getLevel()>0){
                 stack.pop();
             }
-            //TODO persist current master
             logger.info("CB:{}",stack.pop());
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
-
-
-        //ClassPathResource blockFile = new ClassPathResource("init/Block.qbd");
         FileSystemResource blockFile = new FileSystemResource("init/Block.qbd");
-
-        InputStream fileInputStream = null;
         try {
-            fileInputStream = blockFile.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
+            InputStream fileInputStream = blockFile.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(fileInputStream, "UTF-8"));
             reader.readLine();
             String line = reader.readLine();
             while(line != null) {
                 createBlock(line);
                 line=reader.readLine();
             }
-
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
         }
-
         BenutzerDTO benutzer = new BenutzerDTO();
         benutzer.setFirstName(firstname);
         benutzer.setLastName(lastname);
         benutzer.setUsername(username);
         benutzer.setPassword(password);
         benutzerService.save(benutzer);
-
+        logger.info("Finished initialisation successfully");
     }
 
     protected Block createBlock(String name){
@@ -192,7 +168,6 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
             cb.setMinimumachieved(null);
         }
         if(segments.length>3){
-            //Stream.of(segments).skip(4).reduce(segments[3],(st,e)->st+","+e);
             cb.setDescription(Stream.of(segments).skip(4).reduce(segments[3],(st,e)->st+","+e).trim());
         }else{
             cb.setDescription("");
@@ -203,7 +178,6 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
         }
         cb.setId(checkboxCounter++);
         return checkboxRepository.save(cb);
-//        return cb;
     }
 
 }
