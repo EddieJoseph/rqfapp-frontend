@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -62,7 +63,8 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
             return;
         }
 
-        ClassPathResource checkboxFile = new ClassPathResource("init/RQF.cbd");
+        //ClassPathResource checkboxFile = new ClassPathResource("init/RQF.cbd");
+        FileSystemResource checkboxFile = new FileSystemResource("init/RQF.cbd");
 //        ClassPathResource file = new ClassPathResource("./static/pictures/chaja.jpg");
 //        ClassPathResource file = new ClassPathResource("C:/Users/eddie/Qualitool/backend/init/RQF.cbd");
 
@@ -135,7 +137,8 @@ public class Initializer implements ApplicationListener<ApplicationReadyEvent> {
         }
 
 
-        ClassPathResource blockFile = new ClassPathResource("init/Block.qbd");
+        //ClassPathResource blockFile = new ClassPathResource("init/Block.qbd");
+        FileSystemResource blockFile = new FileSystemResource("init/Block.qbd");
 
         InputStream fileInputStream = null;
         try {

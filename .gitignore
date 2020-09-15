@@ -6,3 +6,5 @@ qualitool.key.pem
 cert/*
 personaldata.sql
 static/*
+init/Block.qbd
+init/RQF.cbd
