@@ -6,9 +6,10 @@ const Settings = (props) =>{
     return(    
     
     <div className="container">
-    <Link to="/usersettings">Benutzer</Link><br/>
-    <Link to="/personsettings">Person</Link><br/>
-    <Link to="/groupsettings">Gruppen</Link>
+        
+    <Link to="/usersettings"><div className="card center"><div className="card-title">Benutzer Einstellungen</div></div></Link><br/>
+    <Link to="/personsettings"><div className="card center"><div className="card-title">Personen Einstellungen</div></div></Link><br/>
+    <Link to="/groupsettings"><div className="card center"><div className="card-title">Gruppen Einstellungen</div></div></Link>
     </div>
     
 )
