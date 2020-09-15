@@ -35,9 +35,17 @@ class _Checkbox extends Component{
     }
 
     getOfsetStyle(level){
-        return {
-            width:level*0.95+"cm",
+        if(this.isMobile()){
+            return {
+                width:level*0.3+"cm",
+            }
+        }else{
+            return {
+                width:level*0.95+"cm",
+            }
         }
+
+        
     }
 
     setExpanded=(val)=>{
@@ -162,6 +170,20 @@ class _Checkbox extends Component{
         }
     }
 
+    effectiveDeviceWidth() {
+        var deviceWidth = window.orientation == 0 ? window.screen.width : window.screen.height;
+        // iOS returns available pixels, Android returns pixels / pixel ratio
+        // http://www.quirksmode.org/blog/archives/2012/07/more_about_devi.html
+        if (navigator.userAgent.indexOf('Android') >= 0 && window.devicePixelRatio) {
+          deviceWidth = deviceWidth / window.devicePixelRatio;
+        }
+        return deviceWidth;
+      }
+
+      isMobile() {
+          return this.effectiveDeviceWidth()<600
+      }
+
 //this.props.expanded, this.props.comments
     render(){
         if(this.props.values===undefined||this.props.values===null||this.props.expanded===undefined||this.props.expanded===null||
@@ -182,12 +204,19 @@ class _Checkbox extends Component{
         }else{
             cn=(values.sighted)?"":"pointer"
         }
-        const uncheckeds=(<svg className="pointer" style={this.styles} onClick={()=>{this.setCheckBox(data.id,"sighted",true)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
-        const checkeds=(<svg className="pointer" style={this.styles} onClick={()=>{this.setCheckBox(data.id,"sighted",false)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
-        const uncheckedp=(<svg className={cn} style={this.stylep} onClick={()=>{this.setCheckBox(data.id,"positiv",true)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
-        const checkedp=(<svg className={cn} style={this.stylep} onClick={()=>{this.setCheckBox(data.id,"positiv",false)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
-        const uncheckedn=(<svg className={cn} style={this.stylen} onClick={()=>{this.setCheckBox(data.id,"negativ",true)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
-        const checkedn=(<svg className={cn} style={this.stylen} onClick={()=>{this.setCheckBox(data.id,"negativ",false)}} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        var size=24;
+        var sizev=24;
+        console.log(this.effectiveDeviceWidth())
+        if(this.isMobile()){
+            size=10;
+        }
+
+        const uncheckeds=(<svg className="pointer" style={this.styles} onClick={()=>{this.setCheckBox(data.id,"sighted",true)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        const checkeds=(<svg className="pointer" style={this.styles} onClick={()=>{this.setCheckBox(data.id,"sighted",false)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        const uncheckedp=(<svg className={cn} style={this.stylep} onClick={()=>{this.setCheckBox(data.id,"positiv",true)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        const checkedp=(<svg className={cn} style={this.stylep} onClick={()=>{this.setCheckBox(data.id,"positiv",false)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        const uncheckedn=(<svg className={cn} style={this.stylen} onClick={()=>{this.setCheckBox(data.id,"negativ",true)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M5 2c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
+        const checkedn=(<svg className={cn} style={this.stylen} onClick={()=>{this.setCheckBox(data.id,"negativ",false)}} xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox={"0 0 "+ sizev + " "+ sizev}><path d="M10.041 17l-4.5-4.319 1.395-1.435 3.08 2.937 7.021-7.183 1.422 1.409-8.418 8.591zm-5.041-15c-1.654 0-3 1.346-3 3v14c0 1.654 1.346 3 3 3h14c1.654 0 3-1.346 3-3v-14c0-1.654-1.346-3-3-3h-14zm19 3v14c0 2.761-2.238 5-5 5h-14c-2.762 0-5-2.239-5-5v-14c0-2.761 2.238-5 5-5h14c2.762 0 5 2.239 5 5z"/></svg>)
         let cbSighted=values.sighted?checkeds:uncheckeds
         let cbPositiv=values.positiv?checkedp:uncheckedp
         let cbNegativ=values.negativ?checkedn:uncheckedn
@@ -241,6 +270,23 @@ class _Checkbox extends Component{
         }
 
         if(data.level!==0){
+            if(this.isMobile()){
+            return(<div className="z-depth-2">
+
+            <div className="row">
+                <div className="col">{name}</div>
+            </div>
+
+            <div className="row">
+                    <div className="col">{cbSighted}{cbPositiv}{cbNegativ}</div>
+                    <div className="col">{icon}</div>  
+                    <div className="col">{commentIcon}</div>
+                    <div className="col" >{commentAddIcon}</div>
+            </div>
+            <div className="container">{comments}</div>
+            <div className="container">{comments!=null?null:subCheckboxes}</div> 
+            </div>)
+            }else{
         return (
             <div>
             <div className="row">
@@ -256,7 +302,7 @@ class _Checkbox extends Component{
             <div className="container">{comments}</div>
             <div>{comments!=null?null:subCheckboxes}</div> 
             </div>
-        )
+        )}
         }else{
             if(values.passed==null){
                 return(<div className="card">
