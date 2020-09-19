@@ -18,7 +18,6 @@ class Home extends Component{
     }
 
     componentDidMount(){
-        console.log("mounted")
         if(this.props.token===null||this.props.user===null) {
             loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/login")})
         } else {
@@ -30,10 +29,7 @@ class Home extends Component{
        }
     }
 
-    component
-
     componentDidUpdate(prevProps) {
-        console.log("updated")
         if(this.props.baseurl!==prevProps.baseurl||this.props.token!==prevProps.token){
             getPeople(this.props.baseurl, this.props.token, catchNetworkError)
             getStructure(this.props.baseurl, this.props.token, catchNetworkError)
