@@ -48,9 +48,6 @@ public class PersonDTOFactory {
         List<Integer> commentCheckboxIds = commentService.findByPerson(p.getId()).stream().map(c->c.getCheckbox().getId()).collect(Collectors.toList());
         dto.commentnumbers = subcheckboxes.stream().map(subCelem->subCelem.stream().mapToInt(cbId -> Collections.frequency(commentCheckboxIds,cbId)).sum()).collect(Collectors.toList());
         List<Integer> mainIds = checkbox.stream().map(cb -> cb.getId()).collect(Collectors.toList());
-
-        //checkboxService.getPersonalData(p.getId()).getData().stream().filter(pcb->mainIds.contains(pcb.getId().getCheckboxId())).sorted((a,b)->a.getCheckboxId()-b.getCheckboxId()).forEach(c->System.out.println(c.getCheckboxId()));
-
         dto.checkboxValues = checkboxService.getPersonalData(p.getId()).getData().stream().filter(pcb->mainIds.contains(pcb.getId().getCheckboxId())).sorted((a,b)->a.getCheckboxId()-b.getCheckboxId()).map(pcb -> pcb.getPassed()).collect(Collectors.toList());
         return dto;
     }
