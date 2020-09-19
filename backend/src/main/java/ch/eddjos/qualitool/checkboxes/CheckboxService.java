@@ -49,121 +49,19 @@ public class CheckboxService {
         if(pc.isSighted()&&dto.sighted){
             throw new IllegalArgumentException("Only unsighted checkboxes can be changed.");
         }
+        if(pc.isSighted()&&!dto.sighted&&personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(repo.getOne(pc.getCheckboxId()).getParent().getId(),pc.getPersonId())).isSighted()){
+            throw new IllegalArgumentException("Prent checkboxed must be unsighted first.");
+        }
         Checkbox checkbox = repo.getOne(pc.getCheckboxId());
         if((dto.negativ!=pc.isNegativ()||dto.positiv!=pc.isPositiv())&&(checkbox.getSeverity()<2&&checkbox.getBoxes().size()!=0)){
             throw new IllegalArgumentException("Checkbox values of checkboxes with subcheckboxes can not be changed unless they are optional.");
             //TODO Reject if checkbox has subcheckboxes and severity of checkbox is smaller than 2
         }
 
-        pc.setNegativ(dto.negativ);
-        pc.setPositiv(dto.positiv);
-        pc.setSighted(dto.sighted);
-
-        Versionized<PersonalCheckbox> ret = updateCach.update(pc.getPersonId(), pc.getCheckboxId(), pc.copy());
-
-
-        List<Versionized<PersonalCheckbox>> vList = testCheckboxes(person_id);
-
-        if(vList.size()>0){
-            ret = vList.stream().reduce(ret,(acc,c)->acc.combine(c));
-        }
-        return ret;
-    }
-
-    @Transactional
-    public List<Versionized<PersonalCheckbox>> testCheckboxes(int personId){
-        List<Checkbox> pclist=getStructure();
         List<Versionized<PersonalCheckbox>> vList = new ArrayList<>();
-        for(Checkbox cb:pclist){
-            vList.addAll(evaluateCheckbox(cb,personId));
-        }
-        return vList;
-    }
+        pc.updateCheckbox(dto.positiv, dto.negativ, dto.sighted,vList,updateCach,repo,personalCheckboxRepo);
 
-    @Transactional
-    public List<Versionized<PersonalCheckbox>> evaluateCheckbox(Checkbox cb, int personId){
-
-        List<Versionized<PersonalCheckbox>> vList = new ArrayList<>();
-
-        int nrOfSub=0;
-        int subFailed=0;
-        int criticalFailed=0;
-        int criticalNotObservedYet=0;
-        int nonCriticalFailed=0;
-        int nonCriticalPassed=0;
-        PersonalCheckbox  pcb=personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(cb.getId(),personId));
-        for(Checkbox subCb:cb.getBoxes()){
-            PersonalCheckbox subPCb=personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(subCb.getId(),personId));
-            if(pcb.isSighted()){
-                boolean sv = subPCb.isSighted();
-                subPCb.setSighted(true);
-                if(!sv){
-                    logger.debug("updating sighted: {}, {}",subPCb.getPersonId(),subPCb.getCheckboxId());
-                    vList.add(updateCach.update(subPCb.getPersonId(),subPCb.getCheckboxId(),subPCb.copy()));
-                }
-            }
-
-            if(subCb.getBoxes().size()>0) {
-                vList.addAll(evaluateCheckbox(subCb, personId));
-            }
-            if(subCb.getSeverity()==0){//Critical
-                if(subPCb.isNegativ()){
-                    criticalFailed++;
-                }
-                if(!subPCb.isNegativ()&&!subPCb.isPositiv()&&!subPCb.isSighted()){
-                    criticalNotObservedYet++;
-                }
-            }
-            if(subCb.getSeverity()==1){//Normal
-                nrOfSub++;
-                if(subPCb.isNegativ()){
-                    nonCriticalFailed++;
-                }
-                if(subPCb.isPositiv()||(subPCb.isSighted()&&!subPCb.isNegativ())){
-                    nonCriticalPassed++;
-                }
-            }
-            if(subCb.getSeverity()==2){//Nicetohave
-
-            }
-        }
-
-        boolean neg=pcb.isNegativ();
-        boolean pos=pcb.isPositiv();
-        Boolean pas=pcb.getPassed();
-
-        boolean minimum=false;
-        if(cb.getSeverity()!=2) {
-            if (cb.getMinimumachieved() <= nonCriticalPassed) {
-                minimum = true;
-                pcb.setPositiv(true);
-                pcb.setNegativ(false);
-
-            } else if (nrOfSub - nonCriticalFailed < cb.getMinimumachieved()) {
-                minimum = false;
-                pcb.setPositiv(false);
-                pcb.setNegativ(true);
-            } else {
-                minimum = false;
-                pcb.setPositiv(false);
-                pcb.setNegativ(false);
-            }
-        }
-        if(criticalFailed>0){
-            pcb.setPassed(false);
-        }else{
-            if(criticalNotObservedYet>0||!minimum){
-                pcb.setPassed(null);
-            }else{
-                pcb.setPassed(true);
-            }
-        }
-
-        if(pcb.isNegativ()!=neg||pcb.isPositiv()!=pos||pcb.getPassed()!=pas){
-            logger.debug("updating values: {}, {}, {}",pcb.getPersonId(),pcb.getCheckboxId(),pcb.copy());
-            vList.add(updateCach.update(pcb.getPersonId(),pcb.getCheckboxId(),pcb.copy()));
-        }
-        return vList;
+        return vList.subList(1,vList.size()).stream().reduce(vList.get(0),(acc,c)->acc.combine(c));
     }
 
 }
