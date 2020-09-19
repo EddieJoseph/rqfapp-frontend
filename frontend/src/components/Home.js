@@ -18,18 +18,22 @@ class Home extends Component{
     }
 
     componentDidMount(){
+        console.log("mounted")
         if(this.props.token===null||this.props.user===null) {
             loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/login")})
         } else {
-            if(this.props.posts.length===0||this.props.structure.length===0) {
+            //if(this.props.posts.length===0||this.props.structure.length===0) {
             getPeople(this.props.baseurl, this.props.token, catchNetworkError)
             getStructure(this.props.baseurl, this.props.token, catchNetworkError)
             getBlocks(this.props.baseurl, this.props.token, catchNetworkError)
-            }
+            //}
        }
     }
 
+    component
+
     componentDidUpdate(prevProps) {
+        console.log("updated")
         if(this.props.baseurl!==prevProps.baseurl||this.props.token!==prevProps.token){
             getPeople(this.props.baseurl, this.props.token, catchNetworkError)
             getStructure(this.props.baseurl, this.props.token, catchNetworkError)

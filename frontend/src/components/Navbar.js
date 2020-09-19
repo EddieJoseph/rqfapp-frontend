@@ -17,12 +17,12 @@ const Navbar = (props) =>{
                 <li><NavLink to="/logout">Logout</NavLink></li> 
                 <li><NavLink to="/settings">Einstellungen</NavLink></li> 
                 </ul>
-                <a href="#" className="right" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <a href="#" className="right" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
                 
             </div>
         </nav>
     </div>
-    <ul class="sidenav" id="mobile-demo">
+    <ul className="sidenav" id="mobile-demo">
                 <li><div className="usernamenav">{user!=null?"Willkommen "+user.username+"!":""}</div></li>
                 <li><Link to="/">Übersicht</Link></li> 
                 <li><NavLink to="/login">Login</NavLink></li> 
