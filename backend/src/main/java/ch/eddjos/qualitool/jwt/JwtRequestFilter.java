@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import ch.eddjos.qualitool.auth.BenutzerService;
+import io.jsonwebtoken.SignatureException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.debug("Unable to get JWT Token");
             } catch (ExpiredJwtException e) {
                 logger.debug("JWT Token has expired");
+            } catch (SignatureException e) {
+                logger.info("Token authentication failed. IP: {}:{}, Token Header: {}", request.getRemoteAddr(), request.getRemotePort() , requestTokenHeader);
             }
         } else {
             logger.trace("JWT Token does not begin with Bearer String");
@@ -70,6 +73,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             } else {
                 logger.info("Token authentication failed. IP: {}:{}, Token: {}", request.getRemoteAddr(), request.getRemotePort() , jwtToken);
             }
+        } else {
+            logger.info("Token authentication failed. IP: {}:{}, Token Header: {}", request.getRemoteAddr(), request.getRemotePort() , requestTokenHeader);
         }
         chain.doFilter(request, response);
     }
