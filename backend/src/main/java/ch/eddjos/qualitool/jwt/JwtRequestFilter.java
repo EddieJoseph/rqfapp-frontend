@@ -66,6 +66,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 // that the current user is authenticated. So it passes the
 // Spring Security Configurations successfully.
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                logger.trace("Token authentication sucess. IP: {}:{}", request.getRemoteAddr(), request.getRemotePort());
+            } else {
+                logger.info("Token authentication failed. IP: {}:{}, Token: {}", request.getRemoteAddr(), request.getRemotePort() , jwtToken);
             }
         }
         chain.doFilter(request, response);
