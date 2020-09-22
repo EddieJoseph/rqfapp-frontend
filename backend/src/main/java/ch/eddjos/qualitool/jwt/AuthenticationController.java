@@ -2,6 +2,8 @@ package ch.eddjos.qualitool.jwt;
 
 import ch.eddjos.qualitool.auth.BenutzerDTO;
 import ch.eddjos.qualitool.auth.BenutzerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +18,8 @@ import java.util.List;
 @RestController
 @CrossOrigin//(methods = {RequestMethod.POST,RequestMethod.OPTIONS,RequestMethod.GET,RequestMethod.DELETE})
 public class AuthenticationController {
+
+    Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
     private AuthenticationManager authenticationManager;
@@ -40,7 +44,8 @@ public class AuthenticationController {
             final UserDetails userDetails = benutzerService.loadUserByUsername(authenticationRequest.getUsername());
 
             token = jwtTokenUtil.generateToken(userDetails);
-        } catch(Exception ignore){
+        } catch(Exception error){
+            logger.info("Failed Login atempt: {} , username: {}", error.getMessage(), authenticationRequest.getUsername());
             throw new BadCredentialsException("INVALID_CREDENTIALS");
         }
 
