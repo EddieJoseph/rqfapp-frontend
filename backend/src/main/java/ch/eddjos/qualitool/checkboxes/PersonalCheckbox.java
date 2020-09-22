@@ -190,7 +190,7 @@ public class PersonalCheckbox {
                 passed=true;
                 positiv=true;
                 negativ=false;
-            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!getPassed()).count()>cb.getBoxes().size()){
+            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>cb.getBoxes().size()){
                 passed=false;
                 positiv=false;
                 negativ=true;
@@ -202,7 +202,7 @@ public class PersonalCheckbox {
         }
 
         if(change||tpass!=passed){
-            updatelist.add(updateCach.versionize(this));
+            updatelist.add(updateCach.update(getPersonId(),getCheckboxId(),this));//versionize(this));
         }
 
         if(cb.getParent()!=null){
@@ -245,7 +245,7 @@ public class PersonalCheckbox {
                 passed=true;
                 positiv=true;
                 negativ=false;
-            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!getPassed()).count()>cb.getBoxes().size()){
+            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>cb.getBoxes().size()){
                 passed=false;
                 positiv=false;
                 negativ=true;
@@ -257,7 +257,8 @@ public class PersonalCheckbox {
         }
 
         if(sig!=isSighted()||neg!=isNegativ()||pos!=isPositiv()||pas!=getPassed()){
-            returnList.add(updateCach.versionize(this));
+            //returnList.add(updateCach.versionize(this));
+            returnList.add(updateCach.update(this.getPersonId(),this.getCheckboxId(),this));
         }
 
         return returnList;
@@ -309,9 +310,29 @@ public class PersonalCheckbox {
                 positiv=false;
                 passed=false;
             } else{
-                negativ=false;
-                positiv=false;
-                passed=null;
+
+                if(cb.getSeverity()<2){
+                    List<PersonalCheckbox> important = cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(c -> personalCheckboxRepo.getOne(new PersonalCheckboxId(c.getId(), getPersonId()))).collect(Collectors.toList());
+                    int nrPassed = (int)important.stream().filter(c->c.getPassed()!=null&&c.getPassed()).count();
+                    int failed = (int)important.stream().filter(c->c.getPassed()!=null&&!c.getPassed()).count();
+                    if(nrPassed>=cb.getMinimumachieved()){
+                        negativ=false;
+                        positiv=false;
+                        passed=null;
+                    }else if(important.size()-failed<cb.getMinimumachieved()){
+                        negativ=true;
+                        positiv=false;
+                        passed=false;
+                    }else{
+                        negativ=false;
+                        positiv=false;
+                        passed=null;
+                    }
+                } else {
+                    negativ=false;
+                    positiv=true;
+                    passed=true;
+                }
             }
         }else if(cb.getSeverity()<2){
             List<PersonalCheckbox> important = cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(c -> personalCheckboxRepo.getOne(new PersonalCheckboxId(c.getId(), getPersonId()))).collect(Collectors.toList());
@@ -333,7 +354,8 @@ public class PersonalCheckbox {
         }
 
         if(neg!=negativ||pos!=positiv||pas!=passed){
-            updatelist.add(updateCach.versionize(this));
+            //updatelist.add(updateCach.versionize(this));
+            updatelist.add(updateCach.update(this.getPersonId(),this.getCheckboxId(),this));
         }
 
         if(cb.getParent()!=null){
