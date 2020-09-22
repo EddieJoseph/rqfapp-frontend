@@ -39,9 +39,29 @@ class _Person extends Component{
     }
 
     refresh=()=>{
-        getCheckboxUpdates(this.props.baseurl, this.props.token, this.props.match.params.person_id, this.props.checkboxVersion, (e)=>{catchNetworkError(e)})
-        getCommentUpdate(this.props.baseurl, this.props.token, this.props.match.params.person_id, this.props.commentVersion, (e)=>{catchNetworkError(e)})
+        //console.log(this.errorResetCount)
+        if(this.errorResetCount === 10){
+            this.errorResetCount = 0
+            this.errorcount = 0
+        }
+        this.errorResetCount = this.errorResetCount +1
+        getCheckboxUpdates(this.props.baseurl, this.props.token, this.props.match.params.person_id, this.props.checkboxVersion, this.catchRefreshError)
+        getCommentUpdate(this.props.baseurl, this.props.token, this.props.match.params.person_id, this.props.commentVersion, this.catchRefreshError)
     }
+
+    errorResetCount=0;
+    errorcount=0;
+
+    catchRefreshError=(error)=>{
+        //console.log(error,"errorcount: "+this.errorcount)
+        this.errorcount=this.errorcount+1
+        if(this.errorcount>10) {
+            window.location.href = "/logout"
+        }
+    }
+
+
+
 
     cancleRefresh=()=>{
         clearInterval(this.refrechTimer)
