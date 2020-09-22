@@ -33,12 +33,16 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+        String token = null;
+        try {
+            authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword(), benutzerService.loadSaltByUsername(authenticationRequest.getUsername()));
 
-        authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword(),benutzerService.loadSaltByUsername(authenticationRequest.getUsername()));
+            final UserDetails userDetails = benutzerService.loadUserByUsername(authenticationRequest.getUsername());
 
-        final UserDetails userDetails = benutzerService.loadUserByUsername(authenticationRequest.getUsername());
-
-        final String token = jwtTokenUtil.generateToken(userDetails);
+            token = jwtTokenUtil.generateToken(userDetails);
+        } catch(Exception ignore){
+            throw new BadCredentialsException("INVALID_CREDENTIALS");
+        }
 
         return ResponseEntity.ok(new JwtResponse(token));
     }
