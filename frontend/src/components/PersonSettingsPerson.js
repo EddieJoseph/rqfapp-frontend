@@ -1,7 +1,6 @@
 import React from 'react';
 
 const PersonSettingsPerson = (props) =>{
-    //console.log(props)
     return (
         <div className="card">
             <div className="row">

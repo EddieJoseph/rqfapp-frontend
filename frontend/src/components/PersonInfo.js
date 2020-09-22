@@ -47,7 +47,7 @@ class PersonInfo extends Component{
                 a.style = "display: none";
                 return function (data, fileName) {
                     var json = JSON.stringify(data),
-                        url = window.URL.createObjectURL(data);
+                    url = window.URL.createObjectURL(data);
                     a.href = url;
                     a.download = fileName;
                     a.click();
