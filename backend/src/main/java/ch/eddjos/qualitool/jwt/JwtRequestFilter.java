@@ -74,7 +74,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 logger.info("Token authentication failed. IP: {}:{}, Token: {}", request.getRemoteAddr(), request.getRemotePort() , jwtToken);
             }
         } else {
-            logger.info("Token authentication failed. IP: {}:{}, Token Header: {}", request.getRemoteAddr(), request.getRemotePort() , requestTokenHeader);
+            if(requestTokenHeader!=null) {
+                logger.info("Token authentication failed. IP: {}:{}, Token Header: {}", request.getRemoteAddr(), request.getRemotePort(), requestTokenHeader);
+            }
         }
         chain.doFilter(request, response);
     }
