@@ -186,11 +186,12 @@ public class PersonalCheckbox {
                 passed = null;
             }
         } else {
+            int numberOfRatesSubboxes = (int)cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).count();
             if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c->(c.getPassed()!=null&&c.getPassed())).count()>=cb.getMinimumachieved()){
                 passed=true;
                 positiv=true;
                 negativ=false;
-            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>cb.getBoxes().size()){
+            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>numberOfRatesSubboxes-cb.getMinimumachieved()){
                 passed=false;
                 positiv=false;
                 negativ=true;
@@ -202,7 +203,7 @@ public class PersonalCheckbox {
         }
 
         if(change||tpass!=passed){
-            updatelist.add(updateCach.update(getPersonId(),getCheckboxId(),this));//versionize(this));
+            updatelist.add(updateCach.update(getPersonId(),getCheckboxId(),this));
         }
 
         if(cb.getParent()!=null){
@@ -215,7 +216,7 @@ public class PersonalCheckbox {
     }
 
     @Transactional
-    public List<Versionized<PersonalCheckbox>> updateChild(boolean sightedN, UpdateCache<PersonalCheckbox> updateCach, CheckboxRepository checkboxRepo, PersonalCheckboxRepo personalCheckboxRepo) {
+    protected List<Versionized<PersonalCheckbox>> updateChild(boolean sightedN, UpdateCache<PersonalCheckbox> updateCach, CheckboxRepository checkboxRepo, PersonalCheckboxRepo personalCheckboxRepo) {
 
         List<Versionized<PersonalCheckbox>> returnList = new ArrayList<>();
         boolean sig=isSighted();
@@ -241,11 +242,12 @@ public class PersonalCheckbox {
                 passed = null;
             }
         } else {
+            int numberOfRatesSubboxes = (int)cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).count();
             if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c->(c.getPassed()!=null&&c.getPassed())).count()>=cb.getMinimumachieved()){
                 passed=true;
                 positiv=true;
                 negativ=false;
-            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>cb.getBoxes().size()){
+            } else if(cb.getBoxes().stream().filter(b->b.getSeverity()==1).map(b->personalCheckboxRepo.getOne(new PersonalCheckbox.PersonalCheckboxId(b.getId(),getPersonId()))).filter(c-> c.getPassed()!=null&&!c.getPassed()).count()>numberOfRatesSubboxes-cb.getMinimumachieved()){
                 passed=false;
                 positiv=false;
                 negativ=true;
@@ -257,7 +259,6 @@ public class PersonalCheckbox {
         }
 
         if(sig!=isSighted()||neg!=isNegativ()||pos!=isPositiv()||pas!=getPassed()){
-            //returnList.add(updateCach.versionize(this));
             returnList.add(updateCach.update(this.getPersonId(),this.getCheckboxId(),this));
         }
 
@@ -267,7 +268,7 @@ public class PersonalCheckbox {
 
     //Updating
     @Transactional
-    public List<Versionized<PersonalCheckbox>> updateParent(UpdateCache<PersonalCheckbox> updateCach, CheckboxRepository checkboxRepo, PersonalCheckboxRepo personalCheckboxRepo){
+    protected List<Versionized<PersonalCheckbox>> updateParent(UpdateCache<PersonalCheckbox> updateCach, CheckboxRepository checkboxRepo, PersonalCheckboxRepo personalCheckboxRepo){
         List<Versionized<PersonalCheckbox>> updatelist = new ArrayList<>();
         Checkbox cb = checkboxRepo.getOne(getCheckboxId());
         boolean neg=isNegativ();
@@ -354,7 +355,6 @@ public class PersonalCheckbox {
         }
 
         if(neg!=negativ||pos!=positiv||pas!=passed){
-            //updatelist.add(updateCach.versionize(this));
             updatelist.add(updateCach.update(this.getPersonId(),this.getCheckboxId(),this));
         }
 
