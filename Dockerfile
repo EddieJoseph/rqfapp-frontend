@@ -28,5 +28,5 @@ COPY --from=build2 /app/build /usr/share/nginx/html
 RUN cat /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/nginx.conf
 EXPOSE 80
-EXPOSE 443
+#EXPOSE 443
 CMD ["nginx", "-g", "daemon off;"]
