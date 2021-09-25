@@ -2,6 +2,7 @@
   "name": "qualitool",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://rqfapp.ch/app",
   "dependencies": {
     "@stomp/stompjs": "^5.4.4",
     "axios": "^0.19.2",

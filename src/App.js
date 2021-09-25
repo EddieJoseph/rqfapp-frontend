@@ -57,6 +57,14 @@ class App extends Component {
   }
 
   render() {
+
+      /*var basename = ''
+      if(window.location.host.split(":")[0]===localhost){
+        basename ='/'
+      } else {
+        basename ='/app'
+      }*/
+
       return (
         <BrowserRouter basename="/">
           <div className="App">
