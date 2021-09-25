@@ -35,7 +35,13 @@ class App extends Component {
   }
 
   componentDidMount(){
-    var foundBaseurl = window.location.href.split(":")[0]+"://" + window.location.host.split(":")[0]+":8082/"
+    var foundBaseurl = ""
+    if(window.location.host.split(":")[0]==='localhost') {
+      foundBaseurl = window.location.href.split(":")[0]+"://" + window.location.host.split(":")[0]+":8082/"
+    }else{
+      foundBaseurl = 'https://rqfapp.ch/api/'
+    }
+    console.log(foundBaseurl)
     this.props.dispatch({type:"UPDATE_CONFIG",config:{baseurl:foundBaseurl}})
     if(this.props.person!=null){
       document.title = this.props.person.nickname
