@@ -67,7 +67,7 @@ class App extends Component {
       }*/
 
       return (
-        <BrowserRouter basename={"/"+process.env.PUBLIC_URL}>
+        <BrowserRouter basename={"/app"}>
           <div className="App">
             <Navbar/>
             <Route exact path='/' render={(props)=><Home {...props}/>}/>
