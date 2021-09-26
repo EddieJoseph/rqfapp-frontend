@@ -14,7 +14,7 @@ import {getStructure} from '../actions/checkbox'
 class _Person extends Component{
 
     handleLinkClicked=(id)=>{
-        this.props.history.push("/person/"+id)
+        this.props.history.push("/app/person/"+id)
         this.props.match.params.person_id=id
     }
 
@@ -25,7 +25,7 @@ class _Person extends Component{
         getComments(this.props.baseurl, this.props.token, this.props.match.params.person_id, catchNetworkError)
     
         } else {
-            loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/login")})
+            loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/app/login")})
         }
         this.setupRefresh()
     }

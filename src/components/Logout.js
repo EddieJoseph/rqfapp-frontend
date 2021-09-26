@@ -20,7 +20,7 @@ componentDidMount(){
             this.props.setUser(null, null)
             document.cookie = "token=bla;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;";
             setTimeout(()=>{
-                this.props.history.push('/login')
+                this.props.history.push('/app/login')
             },2000)
         }).catch(error=>{
             this.props.setUser(null, null)
@@ -30,7 +30,7 @@ componentDidMount(){
     }else{
         this.setState({message:"Erfolgreich Ausgeloggt."})
             setTimeout(()=>{
-                this.props.history.push('/login')
+                this.props.history.push('/app/login')
             },1000)
     }
 }
