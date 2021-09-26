@@ -68,7 +68,7 @@ export function catchNetworkError(error) {
         if(error.response.status===401){
             store.dispatch(logout())
             console.log("Sitzung abgelaufen")
-            window.location.href = "/logout"
+            window.location.href = "/app/logout"
             //alert("Benutzername oder Passwort falsch.")
         }else
         if(error.response.status===404){

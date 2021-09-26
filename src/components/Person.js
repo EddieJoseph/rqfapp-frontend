@@ -56,7 +56,7 @@ class _Person extends Component{
         //console.log(error,"errorcount: "+this.errorcount)
         this.errorcount=this.errorcount+1
         if(this.errorcount>10) {
-            window.location.href = "/logout"
+            window.location.href = "/app/logout"
         }
     }
 
