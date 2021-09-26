@@ -37,7 +37,8 @@ class App extends Component {
   componentDidMount(){
     //var foundBaseurl = window.location.href.split(":")[0]+"://" + window.location.host.split(":")[0]+":8082/"
     var foundBaseurl = 'https://rqfapp.ch/api/'
-    console.log(foundBaseurl)
+    console.log('baseurl',foundBaseurl)
+    console.log('base path',process.env.PUBLIC_URL)
     this.props.dispatch({type:"UPDATE_CONFIG",config:{baseurl:foundBaseurl}})
     if(this.props.person!=null){
       document.title = this.props.person.nickname
