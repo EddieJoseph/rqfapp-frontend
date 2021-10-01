@@ -20,6 +20,7 @@ export function getCookie(cname) {
 
 export function login(baseurl, username, password, errorHandling){
     var data={username:username,password:password}
+    console.log(baseurl,authenticate)
     return axios.post(baseurl+'authenticate',data,{headers:data})
     .then((response) => {
         store.dispatch(setToken(response.data.token))
