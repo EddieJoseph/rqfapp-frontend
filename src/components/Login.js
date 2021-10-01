@@ -51,7 +51,7 @@ componentDidUpdate(lastProps){
         loadUser(this.props.baseurl, this.props.token, ()=>{})
     }
     if(this.props.user!==null) {
-        this.props.history.push('/app')
+        this.props.history.push('/')
     }
 }
 
