@@ -19,7 +19,7 @@ class Home extends Component{
 
     componentDidMount(){
         if(this.props.token===null||this.props.user===null) {
-            loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/app/login")})
+            loadUserFromCookie(this.props.baseurl, ()=>{this.props.history.push("/login")})
         } else {
             //if(this.props.posts.length===0||this.props.structure.length===0) {
             getPeople(this.props.baseurl, this.props.token, catchNetworkError)
@@ -38,7 +38,7 @@ class Home extends Component{
     }
 
     handleOnClicked=(id)=>{
-        this.props.history.push("/app/person/"+id)
+        this.props.history.push("/person/"+id)
     }
 
     renderPerson(){
