@@ -67,7 +67,8 @@ class App extends Component {
       }*/
 
       return (
-        <BrowserRouter basename={"/app"}>
+        //<BrowserRouter basename={"/app"}>
+          <BrowserRouter basename={"/"}>
           <div className="App">
             <Navbar/>
             <Route exact path='/' render={(props)=><Home {...props}/>}/>
