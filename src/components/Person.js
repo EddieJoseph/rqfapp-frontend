@@ -60,9 +60,6 @@ class _Person extends Component{
         }
     }
 
-
-
-
     cancleRefresh=()=>{
         clearInterval(this.refrechTimer)
         this.refrechTimer=null

@@ -18,7 +18,6 @@ const Navbar = (props) =>{
                 <li><NavLink to="/settings">Einstellungen</NavLink></li> 
                 </ul>
                 <a href="#" className="right" data-target="mobile-demo" className="sidenav-trigger"><i className="material-icons">menu</i></a>
-                
             </div>
         </nav>
     </div>
